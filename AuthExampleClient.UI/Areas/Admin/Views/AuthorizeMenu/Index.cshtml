@@ -1,8 +1,36 @@
-﻿@{
+﻿@model List<ApplicationService>
+
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/AdminLayout/_Layout.cshtml";
 }
 
-<h1>Authorize Menu Page</h1>
-
-
+<div class="container mt-5">
+    <h2>Authorize Menu Management</h2>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Service Name</th>
+                <th>Action Type</th>
+                <th>HTTP Type</th>
+                <th>Definition</th>
+                <th>Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var service in Model)
+            {
+                foreach (var action in service.Actions)
+                {
+                    <tr>
+                        <td>@service.Name</td>
+                        <td>@action.ActionType</td>
+                        <td>@action.HttpType</td>
+                        <td>@action.Definiton</td>
+                        <td>@action.Code</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
