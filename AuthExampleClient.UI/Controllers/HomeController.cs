@@ -1,3 +1,5 @@
+using AuthExampleClient.DTOs.Product;
+using AuthExampleClient.Services.Interfaces;
 using AuthExampleClient.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -7,15 +9,17 @@ namespace AuthExampleClient.UI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IReadService<ProductUser> _readService;
+        public HomeController(ILogger<HomeController> logger, IReadService<ProductUser> readService)
         {
             _logger = logger;
+            _readService = readService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await _readService.GetAllAsync("Products/GetAllProducts", "products");
+            return View(products);
         }
 
         public IActionResult Privacy()

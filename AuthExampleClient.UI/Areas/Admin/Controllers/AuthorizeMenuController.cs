@@ -21,7 +21,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> Index()
         {
-            var datas = await _readService.GetAllAsync("ApplicationServices/GetAuthorizeDefinitionEndpoints");
+            var datas = await _readService.GetAllAsync("ApplicationServices/GetAuthorizeDefinitionEndpoints","");
             return View(datas);
         }
     }

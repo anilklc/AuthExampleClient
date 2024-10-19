@@ -8,31 +8,30 @@ using System.Threading.Tasks;
 
 namespace AuthExampleClient.Services.Services
 {
-    public class WriteService<TEntity> : IWriteService<TEntity>
+    public class WriteService<TCreate,TUpdate> : IWriteService<TCreate,TUpdate>
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient client;
         public WriteService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
+            client = _httpClientFactory.CreateClient("AuthExampleApi");
         }
 
-        public async Task<bool> CreateAsync(string endpoint, TEntity entity)
+        public async Task<bool> CreateAsync(string endpoint, TCreate entity)
         {
-            var client =  _httpClientFactory.CreateClient("AuthExampleApi");
             var response = await client.PostAsJsonAsync(endpoint,entity);
             return response.IsSuccessStatusCode;
         }
 
         public async Task<bool> DeleteAsync(string endpoint, string id)
         {
-            var client = _httpClientFactory.CreateClient("AuthExampleApi");
-            var response = await client.DeleteAsync(endpoint);
+            var response = await client.DeleteAsync($"{endpoint}{id}");
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<bool> UpdateAsync(string endpoint, TEntity entity)
+        public async Task<bool> UpdateAsync(string endpoint, TUpdate entity)
         {
-            var client = _httpClientFactory.CreateClient("AuthExampleApi");
             var response = await client.PutAsJsonAsync(endpoint, entity);
             return response.IsSuccessStatusCode;
         }

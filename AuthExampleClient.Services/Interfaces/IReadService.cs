@@ -2,8 +2,8 @@
 {
     public interface IReadService<TEntity>
     {
-        Task<List<TEntity>> GetAllAsync(string endpoint);
-        Task<TEntity> GetAsync(string endpoint);
+        Task<List<TEntity>> GetAllAsync(string endpoint,string objectName);
+        Task<TEntity> GetAsync(string endpoint,string id);
 
     }
 }

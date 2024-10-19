@@ -1,0 +1,32 @@
+﻿@model List<Brand>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/AdminLayout/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2>Product Management</h2>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Brand Name</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var brand in Model)
+            {
+                <tr>
+                    <td>@brand.Id</td>
+                    <td>@brand.BrandName</td>
+                    <td>
+                        <a href="/Admin/Brands/UpdateBrand/@brand.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="/Admin/Brands/DeleteBrand/@brand.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a href="/Admin/Brands/CreateBrand/" class="btn btn-primary">Add New Brand</a>
+</div>

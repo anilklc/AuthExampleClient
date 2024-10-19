@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AuthExampleClient.Services.Interfaces
 {
-    public interface IWriteService<TEntity>
+    public interface IWriteService<TCreate,TUpdate>
     {
-        Task<bool> CreateAsync(string endpoint,TEntity entity);
+        Task<bool> CreateAsync(string endpoint,TCreate entity);
         Task<bool> DeleteAsync(string endpoint,string id);
-        Task<bool> UpdateAsync(string endpoint,TEntity entity);
+        Task<bool> UpdateAsync(string endpoint,TUpdate entity);
     }
 }

@@ -23,7 +23,7 @@ namespace AuthExampleClient.Services
             });
 
             services.AddScoped(typeof(IReadService<>), typeof(ReadService<>));
-            services.AddScoped(typeof(IWriteService<>), typeof(WriteService<>));
+            services.AddScoped(typeof(IWriteService<,>), typeof(WriteService<,>));
         }
     }
 }

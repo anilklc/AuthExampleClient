@@ -1,4 +1,5 @@
-﻿
+﻿@model List<AuthExampleClient.DTOs.Product.Product>
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/AdminLayout/_Layout.cshtml";
@@ -11,32 +12,28 @@
             <tr>
                 <th>ID</th>
                 <th>Product Name</th>
+                <th>Description</th>
                 <th>Price</th>
+                <th>Brand</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>Sample Product 1</td>
-                <td>$100</td>
-                <td>
-                    <a href="#" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Sample Product 2</td>
-                <td>$150</td>
-                <td>
-                    <a href="#" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
-            <!-- Add more products as needed -->
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.ProductName</td>
+                    <td>@product.ProductDescription</td>
+                    <td>@product.ProductPrice.ToString("C")</td>
+                    <td>@product.BrandName</td>
+                    <td>
+                        <a href="/Admin/Products/UpdateProduct/@product.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="/Admin/Products/DeleteProduct/@product.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
-    <a href="#" class="btn btn-primary">Add New Product</a>
+    <a href="/Admin/Products/CreateProduct/" class="btn btn-primary">Add New Product</a>
 </div>
-

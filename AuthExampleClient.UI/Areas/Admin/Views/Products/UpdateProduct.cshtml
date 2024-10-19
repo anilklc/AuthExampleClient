@@ -1,0 +1,38 @@
+﻿@model UpdateProduct
+@{
+    ViewData["Title"] = "Update Product";
+    Layout = "~/Views/AdminLayout/_Layout.cshtml";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header text-center">
+                    <h4>@ViewData["Title"]</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="UpdateProduct">
+                        <input type="hidden" asp-for="Id" />
+                        <div data-mdb-input-init class="form-outline mb-3">
+                            <input type="text" id="ProductName" class="form-control" asp-for="ProductName" />
+                            <label class="form-label" for="ProductName">Product name</label>
+                        </div>
+                        <div data-mdb-input-init class="form-outline mb-3">
+                            <input type="text" id="ProductDescription" class="form-control" asp-for="ProductDescription" />
+                            <label class="form-label" for="ProductDescription">Product Description</label>
+                        </div>
+                        <div data-mdb-input-init class="form-outline mb-3">
+                            <input type="number" id="ProductPrice" class="form-control" asp-for="ProductPrice" />
+                            <label class="form-label" for="ProductName">Product Price</label>
+                        </div>
+                        <div class="form-outline mb-3">
+                            <label for="BrandId" class="form-label">Brand Name</label>
+                            @Html.DropDownListFor(x => x.BrandId, (IEnumerable<SelectListItem>)ViewBag.BrandValues, "Select a Brand", new { @class = "form-control" })
+                        </div>
+                        <button type="submit" class="btn btn-success">Update Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
