@@ -1,28 +1,38 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using AuthExampleClient.DTOs.AuthorizeMenu;
+using AuthExampleClient.DTOs.Role;
 using AuthExampleClient.Services.Interfaces;
-using AuthExampleClient.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthExampleClient.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/AuthorizeMenu")]
-    public class AuthorizeMenuController : Controller
+    public class AuthorizeMenuController : BaseController
     {
         private readonly IReadService<ApplicationService> _readService;
-        private readonly INotyfService _notyfService;
-        public AuthorizeMenuController(IReadService<ApplicationService> readService, INotyfService notyfService)
+        private readonly IReadService<Role> _roleService;
+ 
+
+        public AuthorizeMenuController(IReadService<ApplicationService> readService, IReadService<Role> roleService, INotyfService notyfService) : base(notyfService)
         {
             _readService = readService;
-            _notyfService = notyfService;
+            _roleService = roleService; 
         }
 
         [HttpGet("[action]")]
         public async Task<IActionResult> Index()
         {
-            var datas = await _readService.GetAllAsync("ApplicationServices/GetAuthorizeDefinitionEndpoints","");
+            var datas = await _readService.GetAllAsync("ApplicationServices/GetAuthorizeDefinitionEndpoints", "");
+            var roles = await _roleService.GetAllAsync("Roles/GetAllRoles", "roles");
+            ViewBag.Roles = roles;
             return View(datas);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AssignRoles(string[] roleIds)
+        {
+            return View();
         }
     }
 }

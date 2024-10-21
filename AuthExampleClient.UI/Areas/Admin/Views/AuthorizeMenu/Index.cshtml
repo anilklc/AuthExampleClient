@@ -1,5 +1,4 @@
 ﻿@model List<ApplicationService>
-
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/AdminLayout/_Layout.cshtml";
@@ -15,6 +14,7 @@
                 <th>HTTP Type</th>
                 <th>Definition</th>
                 <th>Code</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -28,9 +28,65 @@
                         <td>@action.HttpType</td>
                         <td>@action.Definiton</td>
                         <td>@action.Code</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModalCenter">
+                                Assign a Role
+                            </button>
+                        </td>
                     </tr>
                 }
             }
         </tbody>
     </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="roleModalCenter" tabindex="-1" aria-labelledby="roleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roleModalCenterTitle">Assign a Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @foreach (var role in ViewBag.Roles)
+                    {
+                        <div>
+                            <input type="checkbox" name="roleIds" value="@role.Id" id="@role.Id" />
+                            <label for="@role.Id">@role.Name</label>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="saveRolesBtn" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.getElementById('saveRolesBtn').addEventListener('click', function () {
+        var checkedBoxes = document.querySelectorAll('input[name="roleIds"]:checked');
+        var roleIds = Array.from(checkedBoxes).map(box => box.value);
+
+        console.log(roleIds);
+
+        fetch('@Url.Action("AssignRoles", "AuthorizeMenu")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(roleIds)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Roles assigned successfully!');
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            });
+    });
+</script>

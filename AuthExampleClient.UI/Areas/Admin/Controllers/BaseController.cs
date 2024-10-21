@@ -30,12 +30,13 @@ public class BaseController : Controller
         if (apiResponse)
         {
             notyfService.Success(successMessage);
+            return new OkResult(); // Başarılı durumda özel bir sonuç döndür
         }
         else
         {
             notyfService.Error(errorMessage);
+            return new BadRequestResult(); // Hata durumunda özel bir sonuç döndür
         }
-        return RedirectToAction("Index");
     }
 
     protected async Task<IActionResult> HandleDeleteRequestAsync(string id, Func<string, Task<bool>> apiCall, string successMessage, string errorMessage)
