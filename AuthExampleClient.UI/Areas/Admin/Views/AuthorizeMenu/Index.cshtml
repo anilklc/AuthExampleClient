@@ -29,7 +29,11 @@
                         <td>@action.Definiton</td>
                         <td>@action.Code</td>
                         <td>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#roleModalCenter">
+                            <button type="button" class="btn btn-primary assign-role-btn"
+                                    data-menu="@service.Name"
+                                    data-code="@action.Code"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#roleModalCenter">
                                 Assign a Role
                             </button>
                         </td>
@@ -48,13 +52,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @foreach (var role in ViewBag.Roles)
-                    {
-                        <div>
-                            <input type="checkbox" name="roleIds" value="@role.Id" id="@role.Id" />
-                            <label for="@role.Id">@role.Name</label>
-                        </div>
-                    }
+                    <div id="roleList">
+                        <!-- Rollerin dinamik olarak yükleneceği yer -->
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -63,30 +63,75 @@
             </div>
         </div>
     </div>
-</div>
+    <!-- Modal -->
 
-<script>
-    document.getElementById('saveRolesBtn').addEventListener('click', function () {
-        var checkedBoxes = document.querySelectorAll('input[name="roleIds"]:checked');
-        var roleIds = Array.from(checkedBoxes).map(box => box.value);
+    <script>
+        let selectedMenu = '';
+        let selectedCode = '';
 
-        console.log(roleIds);
+        // Role butonuna tıklandığında modalı aç
+        document.querySelectorAll('.assign-role-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                selectedMenu = this.getAttribute('data-menu');
+                selectedCode = this.getAttribute('data-code');
 
-        fetch('@Url.Action("AssignRoles", "AuthorizeMenu")', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(roleIds)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Roles assigned successfully!');
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
+                // Rolleri ve atanmış olanları yeniden yükle
+                fetch(`@Url.Action("GetRolesForMenu", "AuthorizeMenu")?menu=${selectedMenu}&code=${selectedCode}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const roleListContainer = document.getElementById('roleList');
+                        roleListContainer.innerHTML = ''; // Önce içeriği temizle
+
+                        // Eğer roller geldiyse
+                        if (data && data.allRoles && data.allRoles.length > 0) {
+                            data.allRoles.forEach(role => {
+                                // Atanmış roller varsa checkbox'ı checked yap
+                                const isChecked = data.assignedRoleIds.includes(role.id) ? 'checked' : '';
+
+                                roleListContainer.innerHTML += `
+                                            <div>
+                                                <input type="checkbox" name="roleIds" value="${role.id}" id="role_${role.id}" ${isChecked} />
+                                                <label for="role_${role.id}">${role.name}</label>
+                                            </div>
+                                        `;
+                            });
+                        } else {
+                            roleListContainer.innerHTML = `<p>No roles found.</p>`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching roles:", error);
+                        document.getElementById('roleList').innerHTML = `<p>Error loading roles.</p>`;
+                    });
             });
-    });
-</script>
+        });
+
+        document.getElementById('saveRolesBtn').addEventListener('click', function () {
+            const checkedBoxes = document.querySelectorAll('input[name="roleIds"]:checked');
+            const roleIds = Array.from(checkedBoxes).map(box => box.value);
+
+            const modal = new bootstrap.Modal(document.getElementById('roleModalCenter'));
+            modal.hide();
+
+            fetch('@Url.Action("AssignRoles", "AuthorizeMenu")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    Roles: roleIds,
+                    menu: selectedMenu,
+                    code: selectedCode
+                })
+            });
+
+
+            setTimeout(() => {
+                window.location.href = '@Url.Action("Index", "AuthorizeMenu")';
+            },100);
+        });
+
+
+
+    </script>
+</div>
