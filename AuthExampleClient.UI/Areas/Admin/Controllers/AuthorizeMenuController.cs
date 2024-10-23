@@ -34,7 +34,6 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         public async Task<IActionResult> GetRolesForMenu(string menu, string code)
         {
             var allRoles = await _roleService.GetAllAsync("Roles/GetAllRoles", "roles");
-            menu = menu.Replace(" ", "");
             var assignedRoles = await _roleService.GetAllAsync($"AuthorizationEndpoints/GetRolesToEndpoint/{menu}/{code}", "roles");
             var assignedRoleIds = assignedRoles?.Select(r => r.Id).ToArray() ?? new string[] { };
             var result = new
