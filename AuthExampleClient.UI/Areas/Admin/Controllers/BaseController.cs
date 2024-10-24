@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 public class BaseController : Controller
@@ -12,7 +13,7 @@ public class BaseController : Controller
         this.notyfService = notyfService;
     }
 
-    protected async Task<IActionResult> HandleFormAndApiRequestAsync<TModel>(TModel model, Func<Task<bool>> apiCall, string successMessage, string errorMessage, string viewName = null)
+    protected async Task<IActionResult> HandleFormAndApiRequestAsync<TModel>(TModel model, Func<Task<HttpResponseMessage>> apiCall, string successMessage, string errorMessage, string viewName = null)
     {
         if (!ModelState.IsValid)
         {
@@ -27,18 +28,22 @@ public class BaseController : Controller
 
         var apiResponse = await apiCall();
 
-        if (apiResponse)
+        if (apiResponse.IsSuccessStatusCode)
         {
             notyfService.Success(successMessage);
-            return new OkResult(); // Başarılı durumda özel bir sonuç döndür
+            return RedirectToAction("Index");
+        }
+        else if (apiResponse.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            notyfService.Error("Yetkilendirme hatası lütfen yöneticinizle iletişime geçiniz");
+            return RedirectToAction("Index");
         }
         else
         {
             notyfService.Error(errorMessage);
-            return new BadRequestResult(); // Hata durumunda özel bir sonuç döndür
+            return View(viewName ?? nameof(model), model);
         }
     }
-
     protected async Task<IActionResult> HandleDeleteRequestAsync(string id, Func<string, Task<bool>> apiCall, string successMessage, string errorMessage)
     {
         var apiResponse = await apiCall(id);

@@ -27,21 +27,13 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Index(Login login)
         {
-            // API çağrısını yap ve sonucu al
-            var result = await HandleFormAndApiRequestAsync(login,
-                () => _authService.AuthenticateAsync("Auth/Login/", login),
-                "Giriş başarılı",
-                "Giriş başarısız",
-                nameof(Index));
+            return await HandleFormAndApiRequestAsync(
+            login,
+             () => _authService.AuthenticateAsync("Auth/Login/", login),
+            "Giriş başarılı",
+            "Giriş başarısız",
+             nameof(Index));
 
-          if(result is OkResult)
-            {
-                return RedirectToAction("Index", "DashBoard");
-            }
-            else
-            {
-                return View(login);
-            }
         }
 
 

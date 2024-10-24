@@ -25,26 +25,30 @@ namespace AuthExampleClient.Services.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<bool> AuthenticateAsync(string endpoint ,Login login)
+        public async Task<HttpResponseMessage> AuthenticateAsync(string endpoint, Login login)
         {
             var client = _httpClientFactory.CreateClient("AuthExampleApi");
-            var response = await client.PostAsJsonAsync(endpoint,login);
+            var response = await client.PostAsJsonAsync(endpoint, login);
+
             if (response.IsSuccessStatusCode)
             {
                 var jsonContent = await response.Content.ReadAsStringAsync();
                 var jsonObject = JObject.Parse(jsonContent);
-                var objectArray = jsonObject["token"];
-                var token = objectArray?.ToObject<Token>();
-                SetTokenInCookie(token);
-                return true;
+                var token = jsonObject["token"]?.ToObject<Token>();
+
+                if (token != null)
+                {
+                    SetTokenInCookie(token); 
+                }
             }
 
-            return false;
+            return response;
         }
+
 
         public void RemoveTokenFromCookie()
         {
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("AccesToken");
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("AccessToken");
             _httpContextAccessor.HttpContext.Response.Cookies.Delete("RefreshToken");
         }
 
@@ -55,7 +59,7 @@ namespace AuthExampleClient.Services.Services
                 HttpOnly = true,
                 Expires = DateTimeOffset.UtcNow.AddHours(5),
             };
-            _httpContextAccessor.HttpContext.Response.Cookies.Append("AccesToken",token.AccessToken ,cookie);
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("AccessToken",token.AccessToken ,cookie);
             _httpContextAccessor.HttpContext.Response.Cookies.Append("RefreshToken", token.RefreshToken, cookie);
 
         }

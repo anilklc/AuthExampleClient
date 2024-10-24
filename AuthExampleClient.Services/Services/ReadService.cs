@@ -1,10 +1,12 @@
 ﻿using AuthExampleClient.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.AccessControl;
 using System.Text;
@@ -17,10 +19,18 @@ namespace AuthExampleClient.Services.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly HttpClient client;
-        public ReadService(IHttpClientFactory httpClientFactory)
+        private readonly IHttpContextAccessor _contextAccessor;
+
+        public ReadService(IHttpClientFactory httpClientFactory, IHttpContextAccessor contextAccessor)
         {
             _httpClientFactory = httpClientFactory;
             client = _httpClientFactory.CreateClient("AuthExampleApi");
+            _contextAccessor = contextAccessor;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _contextAccessor = contextAccessor;
+            var accessToken = _contextAccessor.HttpContext.Request.Cookies["AccessToken"];
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }
 
         public async Task<TEntity> GetAsync(string endpoint,string id)

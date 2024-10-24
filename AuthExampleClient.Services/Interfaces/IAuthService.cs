@@ -10,7 +10,7 @@ namespace AuthExampleClient.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<bool> AuthenticateAsync(string endpoint,Login login);
+        Task<HttpResponseMessage> AuthenticateAsync(string endpoint,Login login);
         void SetTokenInCookie(Token token);
         void RemoveTokenFromCookie();
     }

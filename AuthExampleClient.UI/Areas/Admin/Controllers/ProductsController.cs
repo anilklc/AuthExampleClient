@@ -71,7 +71,6 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
         {
             ViewBag.brandValues = await GetBrandSelectList();
-
             return await HandleFormAndApiRequestAsync(
                 updateProduct,
                 () => _writeService.UpdateAsync("Products/UpdateProduct/", updateProduct),
