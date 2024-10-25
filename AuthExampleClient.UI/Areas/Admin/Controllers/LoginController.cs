@@ -42,7 +42,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         public IActionResult Logout()
         {
             _authService.RemoveTokenFromCookie();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Login","Admin");
         }
     }
 }

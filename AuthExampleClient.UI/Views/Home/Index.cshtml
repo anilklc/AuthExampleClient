@@ -17,7 +17,7 @@
                         <p class="card-text">@product.ProductDescription</p>
                         <p class="card-text"><strong>@product.ProductPrice TL</strong></p>
                         <div class="d-flex justify-content-end">
-                            <a href="#" class="btn btn-primary">Satın Al</a>
+                            <a href="@Url.Action("CreateOrder", "Orders", new { id = product.Id })" class="btn btn-primary">Satın Al</a>
                         </div>
                     </div>
                 </div>

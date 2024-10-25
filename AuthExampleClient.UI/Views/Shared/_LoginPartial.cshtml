@@ -1,6 +1,20 @@
-﻿    <li class="navbar-nav">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Kayıt Ol</a>
-    </li>
-    <li class="navbar-nav">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Giriş Yap</a>
-    </li>
+﻿<ul class="navbar-nav">
+    @if (Context.Request.Cookies.ContainsKey("AccessToken"))
+    {
+        <li class="navbar-nav">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+        </li>
+        <li class="navbar-nav">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Çıkış Yap</a>
+        </li>
+    }
+    else
+    {
+        <li class="navbar-nav">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Giriş Yap</a>
+        </li>
+        <li class="navbar-nav">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Kayıt Ol</a>
+        </li>
+    }
+</ul>
