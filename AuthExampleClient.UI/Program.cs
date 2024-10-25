@@ -25,6 +25,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseNotyf();
 
+app.UseSession();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

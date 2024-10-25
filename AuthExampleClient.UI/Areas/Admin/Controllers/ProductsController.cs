@@ -1,6 +1,8 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using AuthExampleClient.DTOs.Product;
+using AuthExampleClient.Services.Attributes;
 using AuthExampleClient.Services.Interfaces;
+using AuthExampleClient.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -11,6 +13,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/Products")]
+    
     public class ProductsController : BaseController
     {
         private readonly IReadService<Product> _readService;
@@ -24,6 +27,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Get All Product", "Admin")]
         public async Task<IActionResult> Index()
         {
             var products = await _readService.GetAllAsync("Products/GetAllProducts", "products");
@@ -31,6 +35,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Create Product", "Admin")]
         public async Task<IActionResult> CreateProduct()
         {
             ViewBag.brandValues = await GetBrandSelectList();
@@ -38,6 +43,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpPost("[action]")]
+        [AuthorizeRole("Create Product", "Admin")]
         public async Task<IActionResult> CreateProduct(CreateProduct createProduct)
         {
             ViewBag.brandValues = await GetBrandSelectList();
@@ -52,6 +58,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]/{id}")]
+        [AuthorizeRole("Update Product", "Admin")]
         public async Task<IActionResult> UpdateProduct(string id)
         {
             ViewBag.brandValues = await GetBrandSelectList();
@@ -68,6 +75,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [AuthorizeRole("Update Product", "Admin")]
         public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
         {
             ViewBag.brandValues = await GetBrandSelectList();
@@ -81,6 +89,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]/{id}")]
+        [AuthorizeRole("Delete Product", "Admin")]
         public async Task<IActionResult> DeleteProduct(string id)
         {
             return await HandleDeleteRequestAsync(

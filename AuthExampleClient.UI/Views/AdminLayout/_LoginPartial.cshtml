@@ -1,3 +1,14 @@
-﻿    <li class="navbar-nav">
-        <a class="nav-link text-dark" asp-area="Admin" asp-controller="Login" asp-action="Index">Giriş Yap</a>
-    </li>
+﻿<ul class="navbar-nav">
+    @if (Context.Request.Cookies.ContainsKey("AccessToken"))
+    {
+        <li class="navbar-nav">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Login" asp-action="Logout">Çıkış Yap</a>
+        </li>
+    }
+    else
+    {
+        <li class="navbar-nav">
+            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Login" asp-action="Index">Giriş Yap</a>
+        </li>
+    }
+</ul>

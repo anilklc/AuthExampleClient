@@ -1,8 +1,23 @@
-﻿@{
+﻿@model ProductStatistics
+
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/AdminLayout/_Layout.cshtml";
 }
 
-<h1>Dashboard Page</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.ProductCount</h5>
+                    <p class="card-text">Toplam Ürün Sayısı</p>
+                </div>
+            </div>
+        </div>
+
+        
+
+
 
 

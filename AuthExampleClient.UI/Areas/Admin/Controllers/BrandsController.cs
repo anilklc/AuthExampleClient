@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using AuthExampleClient.DTOs.Brand;
+using AuthExampleClient.Services.Attributes;
 using AuthExampleClient.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,6 +22,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Get All Brand", "Admin")]
         public async Task<IActionResult> Index()
         {
             var datas = await _readService.GetAllAsync("Brands/GetAllBrands", "brands");
@@ -28,12 +30,14 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Create Brand", "Admin")]
         public IActionResult CreateBrand()
         {
             return View();
         }
 
         [HttpPost("[action]")]
+        [AuthorizeRole("Create Brand", "Admin")]
         public async Task<IActionResult> CreateBrand(CreateBrand createBrand)
         {
             return await HandleFormAndApiRequestAsync(
@@ -46,6 +50,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]/{id}")]
+        [AuthorizeRole("Update Brand", "Admin")]
         public async Task<IActionResult> UpdateBrand(string id)
         {
             var brand = await _readService.GetAsync("Brands/GetByIdBrand/", id);
@@ -57,6 +62,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [AuthorizeRole("Update Brand", "Admin")]
         public async Task<IActionResult> UpdateBrand(UpdateBrand updateBrand)
         {
             return await HandleFormAndApiRequestAsync(
@@ -69,6 +75,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]/{id}")]
+        [AuthorizeRole("Delete Brand", "Admin")]
         public async Task<IActionResult> DeleteBrand(string id)
         {
             return await HandleDeleteRequestAsync(

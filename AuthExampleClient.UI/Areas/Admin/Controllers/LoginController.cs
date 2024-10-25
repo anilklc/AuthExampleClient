@@ -1,9 +1,8 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using AuthExampleClient.DTOs.Login;
-using AuthExampleClient.DTOs.Product;
 using AuthExampleClient.Services.Interfaces;
-using AuthExampleClient.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace AuthExampleClient.UI.Areas.Admin.Controllers
 {
@@ -13,14 +12,19 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
     {
         private readonly IAuthService _authService;
 
-        public LoginController(IAuthService authService,INotyfService notyfService) : base(notyfService) 
+        public LoginController(IAuthService authService, INotyfService notyfService) : base(notyfService)
         {
             _authService = authService;
         }
 
         [HttpGet("[action]")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (await _authService.HasTokenInCookie())
+            {
+                return RedirectToAction("Index", "DashBoard", new { area = "Admin" });
+            }
+
             return View();
         }
 
@@ -28,22 +32,17 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         public async Task<IActionResult> Index(Login login)
         {
             return await HandleFormAndApiRequestAsync(
-            login,
-             () => _authService.AuthenticateAsync("Auth/Login/", login),
-            "Giriş başarılı",
-            "Giriş başarısız",
-             nameof(Index));
-
+                login,
+                () => _authService.AuthenticateAsync("Auth/Login/", login),
+                "Giriş başarılı",
+                "Giriş başarısız",
+                nameof(Index));
         }
 
-
-
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
             _authService.RemoveTokenFromCookie();
             return RedirectToAction("Index");
-            
         }
-
     }
 }

@@ -13,5 +13,6 @@ namespace AuthExampleClient.Services.Interfaces
         Task<HttpResponseMessage> AuthenticateAsync(string endpoint,Login login);
         void SetTokenInCookie(Token token);
         void RemoveTokenFromCookie();
+        Task<bool> HasTokenInCookie();
     }
 }

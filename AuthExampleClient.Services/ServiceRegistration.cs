@@ -24,6 +24,8 @@ namespace AuthExampleClient.Services
                 client.BaseAddress = new Uri(configuration.GetSection("BaseUrl").Value);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
+            services.AddHttpContextAccessor();
+            services.AddSession();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
              AddJwtBearer("Admin", options =>
@@ -46,6 +48,7 @@ namespace AuthExampleClient.Services
              });
 
             services.AddScoped<IAuthService,AuthService>();
+            services.AddScoped<IUserService,UserService>();
             services.AddScoped(typeof(IReadService<>), typeof(ReadService<>));
             services.AddScoped(typeof(IWriteService<,>), typeof(WriteService<,>));
         }

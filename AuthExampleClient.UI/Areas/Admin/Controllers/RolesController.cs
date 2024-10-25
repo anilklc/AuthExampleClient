@@ -1,6 +1,8 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using AuthExampleClient.DTOs.Role;
+using AuthExampleClient.Services.Attributes;
 using AuthExampleClient.Services.Interfaces;
+using AuthExampleClient.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -21,6 +23,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Get All Role", "Admin")]
         public async Task<IActionResult> Index()
         {
             var datas = await _readService.GetAllAsync("Roles/GetAllRoles", "roles");
@@ -28,12 +31,14 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Create Role", "Admin")]
         public IActionResult CreateRole()
         {
             return View();
         }
 
         [HttpPost("[action]")]
+        [AuthorizeRole("Create Role", "Admin")]
         public async Task<IActionResult> CreateRole(CreateRole createRole)
         {
             return await HandleFormAndApiRequestAsync(
@@ -46,6 +51,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]/{id}")]
+        [AuthorizeRole("Update Role", "Admin")]
         public async Task<IActionResult> UpdateRole(string id)
         {
             var role = await _readService.GetAsync("Roles/GetByIdRole/", id);
@@ -57,6 +63,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [AuthorizeRole("Update Role", "Admin")]
         public async Task<IActionResult> UpdateRole(UpdateRole updateRole)
         {
             return await HandleFormAndApiRequestAsync(
@@ -69,6 +76,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]/{id}")]
+        [AuthorizeRole("Delete Role", "Admin")]
         public async Task<IActionResult> DeleteRole(string id)
         {
             return await HandleDeleteRequestAsync(

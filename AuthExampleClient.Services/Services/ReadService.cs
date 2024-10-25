@@ -28,7 +28,6 @@ namespace AuthExampleClient.Services.Services
             _contextAccessor = contextAccessor;
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _contextAccessor = contextAccessor;
             var accessToken = _contextAccessor.HttpContext.Request.Cookies["AccessToken"];
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         }

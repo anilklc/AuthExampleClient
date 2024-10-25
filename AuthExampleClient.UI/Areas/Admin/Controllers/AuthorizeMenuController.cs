@@ -2,6 +2,7 @@
 using AuthExampleClient.DTOs.AuthorizeMenu;
 using AuthExampleClient.DTOs.Brand;
 using AuthExampleClient.DTOs.Role;
+using AuthExampleClient.Services.Attributes;
 using AuthExampleClient.Services.Interfaces;
 using AuthExampleClient.Services.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Get Authorize Definition", "Admin")]
         public async Task<IActionResult> Index()
         {
             var datas = await _readService.GetAllAsync("ApplicationServices/GetAuthorizeDefinitionEndpoints", "");
@@ -31,6 +33,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpGet("[action]")]
+        [AuthorizeRole("Get Roles", "Admin")]
         public async Task<IActionResult> GetRolesForMenu(string menu, string code)
         {
             var allRoles = await _roleService.GetAllAsync("Roles/GetAllRoles", "roles");
@@ -45,6 +48,7 @@ namespace AuthExampleClient.UI.Areas.Admin.Controllers
         }
 
         [HttpPost("[action]")]
+        [AuthorizeRole("Assign Role", "Admin")]
         public async Task<IActionResult> AssignRoles([FromBody]AssignRole assignRole)
         {
            return await HandleFormAndApiRequestAsync(
